@@ -29,7 +29,7 @@ The shared libraries are installed to ``vendor/lib``. Remember to set ``LD_LIBRA
 Usage
 -----
 
-No docs yet. You may check out ``examples`` in the meantime.
+API docs are hosted at https://pymccusb.zhimingwang.org/. You may also want to check out ``examples``.
 
 Issues
 ------
