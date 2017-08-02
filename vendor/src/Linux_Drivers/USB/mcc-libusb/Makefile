@@ -15,6 +15,9 @@
 #  Current Version of the driver
 VERSION=1.18
 
+PREFIX ?= /usr/local/
+INCLUDEDIR = $(DESTDIR)$(PREFIX)/include
+LIBDIR = $(DESTDIR)$(PREFIX)/lib
 SRCS =    pmd.c  nist.c   usb-1608G.c usb-20X.c usb-1208FS-Plus.c usb-1608FS-Plus.c usb-2020.c  \
           usb-ctr.c usb-2600.c usb-2408.c usb-2416.c usb-1608HS.c usb-1208HS.c usb-2001-tc.c    \
           usb-1024LS.c usb-1208LS.c usb-1608FS.c usb-7202.c usb-tc.c usb-dio24.c usb-dio96H.c   \
@@ -28,8 +31,8 @@ HEADERS = pmd.h usb-500.h usb-1608G.h usb-20X.h usb-1208FS-Plus.h usb-1608FS-Plu
           usb-1408FS.h usb-1616FS.h usb-3100.h usb-4303.h usb-tc-ai.h usb-dio32HS.h usb-tc-32.h \
           bth-1208LS.h minilab-1008.h usb-1808.h
 OBJS = $(SRCS:.c=.o)   # same list as SRCS with extension changed
-CC=gcc
-CFLAGS+= -g -Wall -fPIC -O -I/usr/local/include/libusb-1.0 -L/usr/local/lib -lusb-1.0
+CFLAGS += -g -Wall -fPIC -Os $(shell pkg-config --cflags libusb-1.0)
+LDFLAGS += -lc -lm $(shell pkg-config --libs libusb-1.0) -lhidapi-libusb
 ifeq ($(shell uname), Darwin)
 	SONAME_FLAGS = -install_name
 	SHARED_EXT = dylib
@@ -60,7 +63,7 @@ endif
 
 libmccusb.$(SHARED_EXT): $(OBJS)
 #	$(CC) -O -shared -Wall $(OBJS) -o $@
-	$(CC) -shared -Wl,$(SONAME_FLAGS),$@ -o $@ $(OBJS) -lc -lm $(CFLAGS)
+	$(CC) -shared -Wl,$(SONAME_FLAGS),$@ -o $@ $(OBJS) $(CFLAGS) $(LDFLAGS)
 
 libmccusb.a: $(OBJS)
 	ar -r libmccusb.a $(OBJS)
@@ -198,14 +201,11 @@ dist:
 	cd ..; tar -zcvf $(DIST_NAME) mcc-libusb/$(DIST_FILES);
 
 install:
-	-install -d /usr/local/lib
-	-install -c --mode=0755 ./libmccusb.a libmccusb.$(SHARED_EXT) /usr/local/lib
-	-/bin/ln -s /usr/local/lib/libmccusb.$(SHARED_EXT) /usr/lib/libmccusb.$(SHARED_EXT)
-	-/bin/ln -s /usr/local/lib/libmccusb.a /usr/lib/libmccusb.a
-	-install -d /usr/local/include/libusb
-	-install -c --mode=0644 ${HEADERS} /usr/local/include/libusb/
+	-install -d $(LIBDIR)
+	-install -c --mode=0755 ./libmccusb.a libmccusb.$(SHARED_EXT) $(LIBDIR)
+	-install -d $(INCLUDEDIR)/libusb
+	-install -c --mode=0644 ${HEADERS} $(INCLUDEDIR)/libusb/
 
 uninstall:
-	-rm -f /usr/local/lib/libmccusb*
-	-rm -f /usr/lib/libmccusb*
-	-rm -rf /usr/local/include/libusb
+	-rm -f $(LIBDIR)/libmccusb*
+	-rm -rf $(INCLUDEDIR)/libusb
