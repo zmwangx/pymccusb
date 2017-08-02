@@ -56,9 +56,9 @@ def print_status(porta_init, portb_init, yig_current):
     filter_state = 'YIG' if portb_init & YIG_ON else '21cm'
     noise_state = 'ON' if portb_init & NOISE_ON else 'OFF'
     yig_frequency = current2frequency(yig_current)
-    print('Power: {0}   Filter: {1}'.format(power_state, filter_state))
-    print('Noise: {0}   '.format(noise_state))
-    print(' YIG: I={0:5.1f} mA f={1:5.1f} MHz'.format(yig_current, yig_frequency))
+    print('Power: {0}   Filter: {1}   Noise: {2}   '
+          .format(power_state, filter_state, noise_state), end='')
+    print('YIG: I={0:5.1f} mA f={1:5.1f} MHz'.format(yig_current, yig_frequency))
 
 
 def main():
