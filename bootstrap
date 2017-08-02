@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+set -e
+
+root="$(dirname "$(realpath $0)")"
+
+hr () {
+    printf '=%.0s' {1..79}
+    echo
+}
+
+# Build libhidapi
+hr
+echo 'Building libhidapi...'
+cd $root/vendor/src/hidapi
+./bootstrap
+./configure --prefix=$root/vendor
+make
+make install
+
+# Build libmccusb
+hr
+echo 'Building libmccusb...'
+cd $root/vendor/src/Linux_Drivers/USB/mcc-libusb
+C_INCLUDE_PATH=$root/vendor/include LD_LIBRARY_PATH=$root/vendor/lib \
+    CFLAGS=-I$root/vendor/include LDFLAGS=-L$root/vendor/lib \
+    make libmccusb.so libmccusb.a
+PREFIX=$root/vendor make install
+
+# Check
+hr
+echo 'Checking libmccusb linkage...'
+echo "LD_LIBRARY_PATH: $root/vendor/lib"
+LD_LIBRARY_PATH=$root/vendor/lib ldd -r $root/vendor/lib/libmccusb.so
