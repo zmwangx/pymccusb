@@ -1,0 +1,443 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>mccusb &mdash; pymccusb 0.1dev documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="pymccusb 0.1dev documentation" href="index.html"/>
+        <link rel="prev" title="pymccusb" href="index.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> pymccusb
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1dev
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#"><code class="docutils literal"><span class="pre">mccusb</span></code></a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">pymccusb</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li><code class="docutils literal"><span class="pre">mccusb</span></code></li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/mccusb.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="mccusb">
+<h1><code class="docutils literal"><span class="pre">mccusb</span></code><a class="headerlink" href="#mccusb" title="Permalink to this headline">¶</a></h1>
+<p>For each class derived from <a class="reference internal" href="#mccusb.MCCUSBDevice" title="mccusb.MCCUSBDevice"><code class="xref py py-class docutils literal"><span class="pre">mccusb.MCCUSBDevice</span></code></a>, you should check its source
+code for a list of constants bound to the class.</p>
+<span class="target" id="module-mccusb"></span><dl class="exception">
+<dt id="mccusb.DeviceNotFoundError">
+<em class="property">exception </em><code class="descclassname">mccusb.</code><code class="descname">DeviceNotFoundError</code><a class="reference internal" href="_modules/mccusb.html#DeviceNotFoundError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mccusb.DeviceNotFoundError" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="mccusb.MCCUSBDevice">
+<em class="property">class </em><code class="descclassname">mccusb.</code><code class="descname">MCCUSBDevice</code><span class="sig-paren">(</span><em>part_number</em>, <em>product_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mccusb.html#MCCUSBDevice"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mccusb.MCCUSBDevice" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="mccusb.MCCUSB1208FSPlusDevice">
+<em class="property">class </em><code class="descclassname">mccusb.</code><code class="descname">MCCUSB1208FSPlusDevice</code><a class="reference internal" href="_modules/mccusb.html#MCCUSB1208FSPlusDevice"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mccusb.MCCUSB1208FSPlusDevice" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="mccusb.MCCUSB1208FSPlusDevice.dTristateR">
+<code class="descname">dTristateR</code><span class="sig-paren">(</span><em>port</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mccusb.html#MCCUSB1208FSPlusDevice.dTristateR"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mccusb.MCCUSB1208FSPlusDevice.dTristateR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mccusb.MCCUSB1208FSPlusDevice.dTristateW">
+<code class="descname">dTristateW</code><span class="sig-paren">(</span><em>port</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mccusb.html#MCCUSB1208FSPlusDevice.dTristateW"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mccusb.MCCUSB1208FSPlusDevice.dTristateW" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mccusb.MCCUSB1208FSPlusDevice.dPort">
+<code class="descname">dPort</code><span class="sig-paren">(</span><em>port</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mccusb.html#MCCUSB1208FSPlusDevice.dPort"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mccusb.MCCUSB1208FSPlusDevice.dPort" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mccusb.MCCUSB1208FSPlusDevice.dLatchR">
+<code class="descname">dLatchR</code><span class="sig-paren">(</span><em>port</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mccusb.html#MCCUSB1208FSPlusDevice.dLatchR"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mccusb.MCCUSB1208FSPlusDevice.dLatchR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mccusb.MCCUSB1208FSPlusDevice.dLatchW">
+<code class="descname">dLatchW</code><span class="sig-paren">(</span><em>port</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mccusb.html#MCCUSB1208FSPlusDevice.dLatchW"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mccusb.MCCUSB1208FSPlusDevice.dLatchW" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mccusb.MCCUSB1208FSPlusDevice.aIn">
+<code class="descname">aIn</code><span class="sig-paren">(</span><em>channel</em>, <em>mode</em>, <em>range_</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mccusb.html#MCCUSB1208FSPlusDevice.aIn"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mccusb.MCCUSB1208FSPlusDevice.aIn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mccusb.MCCUSB1208FSPlusDevice.aInScanStart">
+<code class="descname">aInScanStart</code><span class="sig-paren">(</span><em>count</em>, <em>retrig_count</em>, <em>frequency</em>, <em>channels</em>, <em>options</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mccusb.html#MCCUSB1208FSPlusDevice.aInScanStart"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mccusb.MCCUSB1208FSPlusDevice.aInScanStart" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mccusb.MCCUSB1208FSPlusDevice.aInScanConfig">
+<code class="descname">aInScanConfig</code><span class="sig-paren">(</span><em>ranges</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mccusb.html#MCCUSB1208FSPlusDevice.aInScanConfig"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mccusb.MCCUSB1208FSPlusDevice.aInScanConfig" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mccusb.MCCUSB1208FSPlusDevice.aInScanConfigR">
+<code class="descname">aInScanConfigR</code><span class="sig-paren">(</span><em>ranges</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mccusb.html#MCCUSB1208FSPlusDevice.aInScanConfigR"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mccusb.MCCUSB1208FSPlusDevice.aInScanConfigR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mccusb.MCCUSB1208FSPlusDevice.aInScanRead">
+<code class="descname">aInScanRead</code><span class="sig-paren">(</span><em>nscan</em>, <em>nchan</em>, <em>options</em>, <em>timeout</em>, <em>buffersize</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mccusb.html#MCCUSB1208FSPlusDevice.aInScanRead"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mccusb.MCCUSB1208FSPlusDevice.aInScanRead" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mccusb.MCCUSB1208FSPlusDevice.aInScanStop">
+<code class="descname">aInScanStop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mccusb.html#MCCUSB1208FSPlusDevice.aInScanStop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mccusb.MCCUSB1208FSPlusDevice.aInScanStop" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mccusb.MCCUSB1208FSPlusDevice.aInScanClearFIFO">
+<code class="descname">aInScanClearFIFO</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mccusb.html#MCCUSB1208FSPlusDevice.aInScanClearFIFO"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mccusb.MCCUSB1208FSPlusDevice.aInScanClearFIFO" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mccusb.MCCUSB1208FSPlusDevice.aOut">
+<code class="descname">aOut</code><span class="sig-paren">(</span><em>channel</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mccusb.html#MCCUSB1208FSPlusDevice.aOut"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mccusb.MCCUSB1208FSPlusDevice.aOut" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mccusb.MCCUSB1208FSPlusDevice.aOutR">
+<code class="descname">aOutR</code><span class="sig-paren">(</span><em>channel</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mccusb.html#MCCUSB1208FSPlusDevice.aOutR"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mccusb.MCCUSB1208FSPlusDevice.aOutR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mccusb.MCCUSB1208FSPlusDevice.aOutScanStop">
+<code class="descname">aOutScanStop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mccusb.html#MCCUSB1208FSPlusDevice.aOutScanStop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mccusb.MCCUSB1208FSPlusDevice.aOutScanStop" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mccusb.MCCUSB1208FSPlusDevice.aOutScanClearFIFO">
+<code class="descname">aOutScanClearFIFO</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mccusb.html#MCCUSB1208FSPlusDevice.aOutScanClearFIFO"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mccusb.MCCUSB1208FSPlusDevice.aOutScanClearFIFO" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mccusb.MCCUSB1208FSPlusDevice.aInBulkFlush">
+<code class="descname">aInBulkFlush</code><span class="sig-paren">(</span><em>count</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mccusb.html#MCCUSB1208FSPlusDevice.aInBulkFlush"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mccusb.MCCUSB1208FSPlusDevice.aInBulkFlush" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mccusb.MCCUSB1208FSPlusDevice.aOutScanStart">
+<code class="descname">aOutScanStart</code><span class="sig-paren">(</span><em>count</em>, <em>frequency</em>, <em>options</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mccusb.html#MCCUSB1208FSPlusDevice.aOutScanStart"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mccusb.MCCUSB1208FSPlusDevice.aOutScanStart" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mccusb.MCCUSB1208FSPlusDevice.counter">
+<code class="descname">counter</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mccusb.html#MCCUSB1208FSPlusDevice.counter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mccusb.MCCUSB1208FSPlusDevice.counter" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mccusb.MCCUSB1208FSPlusDevice.counterInit">
+<code class="descname">counterInit</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mccusb.html#MCCUSB1208FSPlusDevice.counterInit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mccusb.MCCUSB1208FSPlusDevice.counterInit" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mccusb.MCCUSB1208FSPlusDevice.readCalMemory">
+<code class="descname">readCalMemory</code><span class="sig-paren">(</span><em>address</em>, <em>count</em>, <em>buffersize</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mccusb.html#MCCUSB1208FSPlusDevice.readCalMemory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mccusb.MCCUSB1208FSPlusDevice.readCalMemory" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mccusb.MCCUSB1208FSPlusDevice.writeCalMemory">
+<code class="descname">writeCalMemory</code><span class="sig-paren">(</span><em>address</em>, <em>count</em>, <em>data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mccusb.html#MCCUSB1208FSPlusDevice.writeCalMemory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mccusb.MCCUSB1208FSPlusDevice.writeCalMemory" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mccusb.MCCUSB1208FSPlusDevice.readUserMemory">
+<code class="descname">readUserMemory</code><span class="sig-paren">(</span><em>address</em>, <em>count</em>, <em>buffersize</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mccusb.html#MCCUSB1208FSPlusDevice.readUserMemory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mccusb.MCCUSB1208FSPlusDevice.readUserMemory" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mccusb.MCCUSB1208FSPlusDevice.writeUserMemory">
+<code class="descname">writeUserMemory</code><span class="sig-paren">(</span><em>address</em>, <em>count</em>, <em>data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mccusb.html#MCCUSB1208FSPlusDevice.writeUserMemory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mccusb.MCCUSB1208FSPlusDevice.writeUserMemory" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mccusb.MCCUSB1208FSPlusDevice.readMBDMemory">
+<code class="descname">readMBDMemory</code><span class="sig-paren">(</span><em>address</em>, <em>count</em>, <em>buffersize</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mccusb.html#MCCUSB1208FSPlusDevice.readMBDMemory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mccusb.MCCUSB1208FSPlusDevice.readMBDMemory" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mccusb.MCCUSB1208FSPlusDevice.writeMBDMemory">
+<code class="descname">writeMBDMemory</code><span class="sig-paren">(</span><em>address</em>, <em>count</em>, <em>data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mccusb.html#MCCUSB1208FSPlusDevice.writeMBDMemory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mccusb.MCCUSB1208FSPlusDevice.writeMBDMemory" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mccusb.MCCUSB1208FSPlusDevice.blink">
+<code class="descname">blink</code><span class="sig-paren">(</span><em>count</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mccusb.html#MCCUSB1208FSPlusDevice.blink"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mccusb.MCCUSB1208FSPlusDevice.blink" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mccusb.MCCUSB1208FSPlusDevice.reset">
+<code class="descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mccusb.html#MCCUSB1208FSPlusDevice.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mccusb.MCCUSB1208FSPlusDevice.reset" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mccusb.MCCUSB1208FSPlusDevice.status">
+<code class="descname">status</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mccusb.html#MCCUSB1208FSPlusDevice.status"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mccusb.MCCUSB1208FSPlusDevice.status" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mccusb.MCCUSB1208FSPlusDevice.getSerialNumber">
+<code class="descname">getSerialNumber</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mccusb.html#MCCUSB1208FSPlusDevice.getSerialNumber"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mccusb.MCCUSB1208FSPlusDevice.getSerialNumber" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mccusb.MCCUSB1208FSPlusDevice.dfu">
+<code class="descname">dfu</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mccusb.html#MCCUSB1208FSPlusDevice.dfu"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mccusb.MCCUSB1208FSPlusDevice.dfu" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mccusb.MCCUSB1208FSPlusDevice.mbdCommand">
+<code class="descname">mbdCommand</code><span class="sig-paren">(</span><em>str_</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mccusb.html#MCCUSB1208FSPlusDevice.mbdCommand"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mccusb.MCCUSB1208FSPlusDevice.mbdCommand" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mccusb.MCCUSB1208FSPlusDevice.mbdRaw">
+<code class="descname">mbdRaw</code><span class="sig-paren">(</span><em>cmd</em>, <em>size</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mccusb.html#MCCUSB1208FSPlusDevice.mbdRaw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mccusb.MCCUSB1208FSPlusDevice.mbdRaw" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mccusb.MCCUSB1208FSPlusDevice.cleanup">
+<code class="descname">cleanup</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mccusb.html#MCCUSB1208FSPlusDevice.cleanup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mccusb.MCCUSB1208FSPlusDevice.cleanup" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mccusb.MCCUSB1208FSPlusDevice.buildGainTableDE">
+<code class="descname">buildGainTableDE</code><span class="sig-paren">(</span><em>table_DE</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mccusb.html#MCCUSB1208FSPlusDevice.buildGainTableDE"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mccusb.MCCUSB1208FSPlusDevice.buildGainTableDE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mccusb.MCCUSB1208FSPlusDevice.buildGainTableSE">
+<code class="descname">buildGainTableSE</code><span class="sig-paren">(</span><em>table_SE</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mccusb.html#MCCUSB1208FSPlusDevice.buildGainTableSE"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mccusb.MCCUSB1208FSPlusDevice.buildGainTableSE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mccusb.MCCUSB1208FSPlusDevice.volts">
+<code class="descname">volts</code><span class="sig-paren">(</span><em>value</em>, <em>range_</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mccusb.html#MCCUSB1208FSPlusDevice.volts"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mccusb.MCCUSB1208FSPlusDevice.volts" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="mccusb.MCCUSB1408FSPlusDevice">
+<em class="property">class </em><code class="descclassname">mccusb.</code><code class="descname">MCCUSB1408FSPlusDevice</code><a class="reference internal" href="_modules/mccusb.html#MCCUSB1408FSPlusDevice"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mccusb.MCCUSB1408FSPlusDevice" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="mccusb.MCCUSB1408FSPlusDevice.volts">
+<code class="descname">volts</code><span class="sig-paren">(</span><em>value</em>, <em>range_</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mccusb.html#MCCUSB1408FSPlusDevice.volts"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mccusb.MCCUSB1408FSPlusDevice.volts" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="index.html" class="btn btn-neutral" title="pymccusb" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Zhiming Wang.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.1dev',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -1,0 +1,585 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>mccusb &mdash; pymccusb 0.1dev documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="pymccusb 0.1dev documentation" href="../index.html"/>
+        <link rel="up" title="Module code" href="index.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> pymccusb
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1dev
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../mccusb.html"><code class="docutils literal"><span class="pre">mccusb</span></code></a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">pymccusb</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Module code</a> &raquo;</li>
+        
+      <li>mccusb</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for mccusb</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">ctypes</span> <span class="k">import</span> <span class="o">*</span>
+
+
+<span class="c1"># Do not load shared library when building docs.</span>
+<span class="c1"># This allows building docs in any pure Python environment.</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;SPHINX_BUILD&#39;</span><span class="p">):</span>
+    <span class="n">libmccusb</span> <span class="o">=</span> <span class="n">cdll</span><span class="o">.</span><span class="n">LoadLibrary</span><span class="p">(</span><span class="s1">&#39;libmccusb.so&#39;</span><span class="p">)</span>
+    <span class="c1"># libusb_init is essential; without it usb_device_find_USB_MCC would segfault.</span>
+    <span class="n">libmccusb</span><span class="o">.</span><span class="n">libusb_init</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">getfunc</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">argtypes</span><span class="p">,</span> <span class="n">restype</span><span class="p">):</span>
+    <span class="n">func</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">libmccusb</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+    <span class="n">func</span><span class="o">.</span><span class="n">argtypes</span> <span class="o">=</span> <span class="n">argtypes</span>
+    <span class="n">func</span><span class="o">.</span><span class="n">restype</span> <span class="o">=</span> <span class="n">restype</span>
+    <span class="k">return</span> <span class="n">func</span>
+
+
+<span class="k">def</span> <span class="nf">sequence_to_array</span><span class="p">(</span><span class="n">seq</span><span class="p">,</span> <span class="n">member_type</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="c1"># Convert any sequence or iterator type to a ctypes array. Iterator</span>
+    <span class="c1"># is apparently consumed. member_type should be a ctypes type. The</span>
+    <span class="c1"># length of the array is the length of the sequence unless</span>
+    <span class="c1"># specified.</span>
+    <span class="n">flat</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">seq</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">length</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">flat</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">member_type</span> <span class="o">*</span> <span class="n">length</span><span class="p">)(</span><span class="o">*</span><span class="n">flat</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="DeviceNotFoundError"><a class="viewcode-back" href="../mccusb.html#mccusb.DeviceNotFoundError">[docs]</a><span class="k">class</span> <span class="nc">DeviceNotFoundError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="MCCUSBDevice"><a class="viewcode-back" href="../mccusb.html#mccusb.MCCUSBDevice">[docs]</a><span class="k">class</span> <span class="nc">MCCUSBDevice</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">part_number</span><span class="p">,</span> <span class="n">product_id</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">part_number</span> <span class="o">=</span> <span class="n">part_number</span>
+        <span class="c1"># libusb_device_handle* usb_device_find_USB_MCC(int productId, char *serialID);</span>
+        <span class="n">usb_device_find</span> <span class="o">=</span> <span class="n">getfunc</span><span class="p">(</span><span class="s1">&#39;usb_device_find_USB_MCC&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">c_int</span><span class="p">,</span> <span class="n">c_char_p</span><span class="p">],</span> <span class="n">c_void_p</span><span class="p">)</span>
+        <span class="n">device_handle</span> <span class="o">=</span> <span class="n">usb_device_find</span><span class="p">(</span><span class="n">product_id</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">device_handle</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">DeviceNotFoundError</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_device_handle</span> <span class="o">=</span> <span class="n">device_handle</span></div>
+
+
+<div class="viewcode-block" id="MCCUSB1208FSPlusDevice"><a class="viewcode-back" href="../mccusb.html#mccusb.MCCUSB1208FSPlusDevice">[docs]</a><span class="k">class</span> <span class="nc">MCCUSB1208FSPlusDevice</span><span class="p">(</span><span class="n">MCCUSBDevice</span><span class="p">):</span>
+
+    <span class="c1"># Constants from &lt;libusb/usb-1208FS-Plus.h&gt;</span>
+
+    <span class="n">PRODUCT_ID</span> <span class="o">=</span> <span class="mh">0x00e8</span>
+
+    <span class="c1"># Digial I/O commands</span>
+    <span class="n">DTRISTATE</span>       <span class="o">=</span> <span class="mh">0x00</span>  <span class="c1"># Read/Write Tristate register</span>
+    <span class="n">DPORT</span>           <span class="o">=</span> <span class="mh">0x01</span>  <span class="c1"># Read digital port pins</span>
+    <span class="n">DLATCH</span>          <span class="o">=</span> <span class="mh">0x02</span>  <span class="c1"># Read/Write Digital port output latch register</span>
+
+    <span class="c1"># Analog input commands</span>
+    <span class="n">AIN</span>             <span class="o">=</span> <span class="mh">0x10</span>  <span class="c1"># Read analog input channel</span>
+    <span class="n">AIN_SCAN_START</span>  <span class="o">=</span> <span class="mh">0x11</span>  <span class="c1"># Start analog input scan</span>
+    <span class="n">AIN_SCAN_STOP</span>   <span class="o">=</span> <span class="mh">0x12</span>  <span class="c1"># Stop analog input scan</span>
+    <span class="n">AIN_CONFIG</span>      <span class="o">=</span> <span class="mh">0x14</span>  <span class="c1"># Analog input channel configuration</span>
+    <span class="n">AIN_CLR_FIFO</span>    <span class="o">=</span> <span class="mh">0x15</span>  <span class="c1"># Clear the analog input scan FIFO</span>
+    <span class="n">AIN_BULK_FLUSH</span>  <span class="o">=</span> <span class="mh">0x16</span>  <span class="c1"># Flush the bulk IN endpoint with empty packets</span>
+
+    <span class="c1"># Analog output commands</span>
+    <span class="n">AOUT</span>            <span class="o">=</span> <span class="mh">0x18</span>  <span class="c1"># Read/Write analog output channel</span>
+    <span class="n">AOUT_SCAN_START</span> <span class="o">=</span> <span class="mh">0x1A</span>  <span class="c1"># Start analog output scan</span>
+    <span class="n">AOUT_SCAN_STOP</span>  <span class="o">=</span> <span class="mh">0x1B</span>  <span class="c1"># Stop analog output scan</span>
+    <span class="n">AOUT_CLR_FIFO</span>   <span class="o">=</span> <span class="mh">0x1C</span>  <span class="c1"># Clear the analog output scan FIFO</span>
+
+    <span class="c1"># Counter/Timer commands</span>
+    <span class="n">COUNTER</span>         <span class="o">=</span> <span class="mh">0x20</span>  <span class="c1"># Read/reset event counter</span>
+
+    <span class="c1"># Memory commands</span>
+    <span class="n">CAL_MEMORY</span>      <span class="o">=</span> <span class="mh">0x30</span>  <span class="c1"># Read/Write Calibration Memory</span>
+    <span class="n">USER_MEMORY</span>     <span class="o">=</span> <span class="mh">0x31</span>  <span class="c1"># Read/Write User Memory</span>
+    <span class="n">MBD_MEMORY</span>      <span class="o">=</span> <span class="mh">0x32</span>  <span class="c1"># Read/Write MBD Memory</span>
+
+    <span class="c1"># Miscellaneous commands</span>
+    <span class="n">BLINK_LED</span>       <span class="o">=</span> <span class="mh">0x41</span>  <span class="c1"># Causes LED to blink</span>
+    <span class="n">RESET</span>           <span class="o">=</span> <span class="mh">0x42</span>  <span class="c1"># Reset device</span>
+    <span class="n">STATUS</span>          <span class="o">=</span> <span class="mh">0x44</span>  <span class="c1"># Read device status</span>
+    <span class="n">SERIAL</span>          <span class="o">=</span> <span class="mh">0x48</span>  <span class="c1"># Read/Write serial number</span>
+    <span class="n">DFU</span>             <span class="o">=</span> <span class="mh">0x50</span>  <span class="c1"># Enter device firmware upgrade mode</span>
+
+    <span class="c1"># MBD</span>
+    <span class="n">MBD_COMMAND</span>     <span class="o">=</span> <span class="mh">0x80</span>  <span class="c1"># Text-based MBD command / response</span>
+    <span class="n">MBD_RAW</span>         <span class="o">=</span> <span class="mh">0x81</span>  <span class="c1"># Raw MBD response</span>
+
+    <span class="c1"># Analog input scan options</span>
+    <span class="n">IMMEDIATE_TRANSFER_MODE</span> <span class="o">=</span> <span class="mh">0x1</span>
+    <span class="n">BLOCK_TRANSFER_MODE</span>     <span class="o">=</span> <span class="mh">0x0</span>
+    <span class="n">DIFFERENTIAL_MODE</span>       <span class="o">=</span> <span class="mh">0x2</span>
+    <span class="n">SINGLE_ENDED_MODE</span>       <span class="o">=</span> <span class="mh">0x0</span>
+    <span class="n">NO_TRIGGER</span>              <span class="o">=</span> <span class="mh">0x0</span>
+    <span class="n">TRIG_EDGE_RISING</span>        <span class="o">=</span> <span class="mh">0x1</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span>
+    <span class="n">TRIG_EDGE_FALLING</span>       <span class="o">=</span> <span class="mh">0x2</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span>
+    <span class="n">TRIG_LEVEL_HIGH</span>         <span class="o">=</span> <span class="mh">0x3</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span>
+    <span class="n">TRIG_LEVEL_LOW</span>          <span class="o">=</span> <span class="mh">0x4</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span>
+    <span class="n">RETRIGGER_MODE</span>          <span class="o">=</span> <span class="mh">0x1</span> <span class="o">&lt;&lt;</span> <span class="mi">5</span>
+    <span class="n">STALL_ON_OVERRUN</span>        <span class="o">=</span> <span class="mh">0x0</span>
+    <span class="n">CONTINUOUS</span>              <span class="o">=</span> <span class="mh">0x1</span> <span class="o">&lt;&lt;</span> <span class="mi">6</span>
+    <span class="n">INHIBIT_STALL</span>           <span class="o">=</span> <span class="mh">0x1</span> <span class="o">&lt;&lt;</span> <span class="mi">7</span>
+
+    <span class="c1"># Analog input</span>
+    <span class="n">SINGLE_ENDED</span>   <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">DIFFERENTIAL</span>   <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">CALIBRATION</span>    <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">LAST_CHANNEL</span>   <span class="o">=</span> <span class="mh">0x80</span>
+    <span class="n">PACKET_SIZE</span>    <span class="o">=</span> <span class="mi">64</span>       <span class="c1"># max bulk transfer size in bytes</span>
+
+    <span class="c1"># Ranges</span>
+    <span class="n">BP_20V</span>   <span class="o">=</span> <span class="mh">0x0</span>      <span class="c1"># +/- 20 V</span>
+    <span class="n">BP_10V</span>   <span class="o">=</span> <span class="mh">0x1</span>      <span class="c1"># +/- 10V</span>
+    <span class="n">BP_5V</span>    <span class="o">=</span> <span class="mh">0x2</span>      <span class="c1"># +/- 5V</span>
+    <span class="n">BP_4V</span>    <span class="o">=</span> <span class="mh">0x3</span>      <span class="c1"># +/- 4V</span>
+    <span class="n">BP_2_5V</span>  <span class="o">=</span> <span class="mh">0x4</span>      <span class="c1"># +/- 2.5V</span>
+    <span class="n">BP_2V</span>    <span class="o">=</span> <span class="mh">0x5</span>      <span class="c1"># +/- 2V</span>
+    <span class="n">BP_1_25V</span> <span class="o">=</span> <span class="mh">0x6</span>      <span class="c1"># +/- 1.25V</span>
+    <span class="n">BP_1V</span>    <span class="o">=</span> <span class="mh">0x7</span>      <span class="c1"># +/- 1V</span>
+    <span class="n">UP_5V</span>    <span class="o">=</span> <span class="mh">0x8</span>      <span class="c1"># 0-5 V analog output</span>
+
+    <span class="c1"># Status bit values</span>
+    <span class="n">AIN_SCAN_RUNNING</span>   <span class="o">=</span> <span class="mh">0x1</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span>
+    <span class="n">AIN_SCAN_OVERRUN</span>   <span class="o">=</span> <span class="mh">0x1</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span>
+    <span class="n">AOUT_SCAN_RUNNING</span>  <span class="o">=</span> <span class="mh">0x1</span> <span class="o">&lt;&lt;</span> <span class="mi">3</span>
+    <span class="n">AOUT_SCAN_OVERRUN</span>  <span class="o">=</span> <span class="mh">0x1</span> <span class="o">&lt;&lt;</span> <span class="mi">4</span>
+
+    <span class="n">NCHAN_DE</span>                <span class="o">=</span>  <span class="mi">4</span>  <span class="c1"># max number of A/D differential channels</span>
+    <span class="n">NCHAN_SE</span>                <span class="o">=</span>  <span class="mi">8</span>  <span class="c1"># max number of A/D single-ended channels</span>
+    <span class="n">NCHAN_AOUT</span>              <span class="o">=</span>  <span class="mi">2</span>  <span class="c1"># max number of D/A 12 bit 0-5V output channels</span>
+    <span class="n">NGAINS_USB1208FS_PLUS</span>   <span class="o">=</span>  <span class="mi">8</span>  <span class="c1"># max number of input gain levels (differential mode only)</span>
+    <span class="n">MAX_PACKET_SIZE</span>         <span class="o">=</span> <span class="mi">64</span>  <span class="c1"># max packet size for FS device</span>
+
+    <span class="n">PORTA</span>     <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># DIO Port A</span>
+    <span class="n">PORTB</span>     <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># DIO Port B</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">MCCUSBDevice</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;USB-1208FS-Plus&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">PRODUCT_ID</span><span class="p">)</span>
+
+<div class="viewcode-block" id="MCCUSB1208FSPlusDevice.dTristateR"><a class="viewcode-back" href="../mccusb.html#mccusb.MCCUSB1208FSPlusDevice.dTristateR">[docs]</a>    <span class="k">def</span> <span class="nf">dTristateR</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">port</span><span class="p">):</span>
+        <span class="c1"># uint8_t usbDTristateR_USB1208FS_Plus(libusb_device_handle *udev, uint8_t port);</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">getfunc</span><span class="p">(</span><span class="s1">&#39;usbDTristateR_USB1208FS_Plus&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">c_void_p</span><span class="p">,</span> <span class="n">c_uint8</span><span class="p">],</span> <span class="n">c_uint8</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">f</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_device_handle</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MCCUSB1208FSPlusDevice.dTristateW"><a class="viewcode-back" href="../mccusb.html#mccusb.MCCUSB1208FSPlusDevice.dTristateW">[docs]</a>    <span class="k">def</span> <span class="nf">dTristateW</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="c1"># void usbDTristateW_USB1208FS_Plus(libusb_device_handle *udev, uint8_t port, uint8_t value);</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">getfunc</span><span class="p">(</span><span class="s1">&#39;usbDTristateW_USB1208FS_Plus&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">c_void_p</span><span class="p">,</span> <span class="n">c_uint8</span><span class="p">,</span> <span class="n">c_uint8</span><span class="p">],</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">f</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_device_handle</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MCCUSB1208FSPlusDevice.dPort"><a class="viewcode-back" href="../mccusb.html#mccusb.MCCUSB1208FSPlusDevice.dPort">[docs]</a>    <span class="k">def</span> <span class="nf">dPort</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">port</span><span class="p">):</span>
+        <span class="c1"># uint8_t usbDPort_USB1208FS_Plus(libusb_device_handle *udev, uint8_t port);</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">getfunc</span><span class="p">(</span><span class="s1">&#39;usbDPort_USB1208FS_Plus&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">c_void_p</span><span class="p">,</span> <span class="n">c_uint8</span><span class="p">],</span> <span class="n">c_uint8</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">f</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_device_handle</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MCCUSB1208FSPlusDevice.dLatchR"><a class="viewcode-back" href="../mccusb.html#mccusb.MCCUSB1208FSPlusDevice.dLatchR">[docs]</a>    <span class="k">def</span> <span class="nf">dLatchR</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">port</span><span class="p">):</span>
+        <span class="c1"># uint8_t usbDLatchR_USB1208FS_Plus(libusb_device_handle *udev, uint8_t port);</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">getfunc</span><span class="p">(</span><span class="s1">&#39;usbDLatchR_USB1208FS_Plus&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">c_void_p</span><span class="p">,</span> <span class="n">c_uint8</span><span class="p">],</span> <span class="n">c_uint8</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">f</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_device_handle</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MCCUSB1208FSPlusDevice.dLatchW"><a class="viewcode-back" href="../mccusb.html#mccusb.MCCUSB1208FSPlusDevice.dLatchW">[docs]</a>    <span class="k">def</span> <span class="nf">dLatchW</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="c1"># void usbDLatchW_USB1208FS_Plus(libusb_device_handle *udev, uint8_t port, uint8_t value);</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">getfunc</span><span class="p">(</span><span class="s1">&#39;usbDLatchW_USB1208FS_Plus&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">c_void_p</span><span class="p">,</span> <span class="n">c_uint8</span><span class="p">,</span> <span class="n">c_uint8</span><span class="p">],</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">f</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_device_handle</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MCCUSB1208FSPlusDevice.aIn"><a class="viewcode-back" href="../mccusb.html#mccusb.MCCUSB1208FSPlusDevice.aIn">[docs]</a>    <span class="k">def</span> <span class="nf">aIn</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">mode</span><span class="p">,</span> <span class="n">range_</span><span class="p">):</span>
+        <span class="c1"># uint16_t usbAIn_USB1208FS_Plus(libusb_device_handle *udev, uint8_t channel, uint8_t mode, uint8_t range);</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">getfunc</span><span class="p">(</span><span class="s1">&#39;usbAIn_USB1208FS_Plus&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">c_void_p</span><span class="p">,</span> <span class="n">c_uint8</span><span class="p">,</span> <span class="n">c_uint8</span><span class="p">,</span> <span class="n">c_uint8</span><span class="p">],</span> <span class="n">c_uint16</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">f</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_device_handle</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">mode</span><span class="p">,</span> <span class="n">range_</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MCCUSB1208FSPlusDevice.aInScanStart"><a class="viewcode-back" href="../mccusb.html#mccusb.MCCUSB1208FSPlusDevice.aInScanStart">[docs]</a>    <span class="k">def</span> <span class="nf">aInScanStart</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span> <span class="n">retrig_count</span><span class="p">,</span> <span class="n">frequency</span><span class="p">,</span> <span class="n">channels</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
+        <span class="c1"># void usbAInScanStart_USB1208FS_Plus(libusb_device_handle *udev, uint32_t count, uint32_t retrig_count, double frequency, uint8_t channels, uint8_t options);</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">getfunc</span><span class="p">(</span><span class="s1">&#39;usbAInScanStart_USB1208FS_Plus&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">c_void_p</span><span class="p">,</span> <span class="n">c_uint32</span><span class="p">,</span> <span class="n">c_uint32</span><span class="p">,</span> <span class="n">c_double</span><span class="p">,</span> <span class="n">c_uint8</span><span class="p">,</span> <span class="n">c_uint8</span><span class="p">],</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">f</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_device_handle</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span> <span class="n">retrig_count</span><span class="p">,</span> <span class="n">frequency</span><span class="p">,</span> <span class="n">channels</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MCCUSB1208FSPlusDevice.aInScanConfig"><a class="viewcode-back" href="../mccusb.html#mccusb.MCCUSB1208FSPlusDevice.aInScanConfig">[docs]</a>    <span class="k">def</span> <span class="nf">aInScanConfig</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ranges</span><span class="p">):</span>
+        <span class="c1"># void usbAInScanConfig_USB1208FS_Plus(libusb_device_handle *udev, uint8_t ranges[8]);</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">getfunc</span><span class="p">(</span><span class="s1">&#39;usbAInScanConfig_USB1208FS_Plus&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">c_void_p</span><span class="p">,</span> <span class="n">c_uint8</span> <span class="o">*</span> <span class="mi">8</span><span class="p">],</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">f</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_device_handle</span><span class="p">,</span> <span class="n">sequence_to_array</span><span class="p">(</span><span class="n">ranges</span><span class="p">,</span> <span class="n">c_uint8</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="MCCUSB1208FSPlusDevice.aInScanConfigR"><a class="viewcode-back" href="../mccusb.html#mccusb.MCCUSB1208FSPlusDevice.aInScanConfigR">[docs]</a>    <span class="k">def</span> <span class="nf">aInScanConfigR</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ranges</span><span class="p">):</span>
+        <span class="c1"># void usbAInScanConfigR_USB1208FS_Plus(libusb_device_handle *udev, uint8_t *ranges);</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">getfunc</span><span class="p">(</span><span class="s1">&#39;usbAInScanConfigR_USB1208FS_Plus&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">c_void_p</span><span class="p">,</span> <span class="n">POINTER</span><span class="p">(</span><span class="n">c_uint8</span><span class="p">)],</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">f</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_device_handle</span><span class="p">,</span> <span class="n">sequence_to_array</span><span class="p">(</span><span class="n">ranges</span><span class="p">,</span> <span class="n">c_uint8</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="MCCUSB1208FSPlusDevice.aInScanRead"><a class="viewcode-back" href="../mccusb.html#mccusb.MCCUSB1208FSPlusDevice.aInScanRead">[docs]</a>    <span class="k">def</span> <span class="nf">aInScanRead</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nscan</span><span class="p">,</span> <span class="n">nchan</span><span class="p">,</span> <span class="n">options</span><span class="p">,</span> <span class="n">timeout</span><span class="p">,</span> <span class="n">buffersize</span><span class="p">):</span>
+        <span class="c1"># int usbAInScanRead_USB1208FS_Plus(libusb_device_handle *udev, int nScan, int nChan, uint16_t *data, uint8_t options, int timeout);</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">getfunc</span><span class="p">(</span><span class="s1">&#39;usbAInScanRead_USB1208FS_Plus&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">c_void_p</span><span class="p">,</span> <span class="n">c_int</span><span class="p">,</span> <span class="n">c_int</span><span class="p">,</span> <span class="n">POINTER</span><span class="p">(</span><span class="n">c_uint16</span><span class="p">),</span> <span class="n">c_uint8</span><span class="p">,</span> <span class="n">c_int</span><span class="p">],</span> <span class="n">c_int</span><span class="p">)</span>
+        <span class="n">buf</span> <span class="o">=</span> <span class="p">(</span><span class="n">c_uint16</span> <span class="o">*</span> <span class="n">buffersize</span><span class="p">)()</span>
+        <span class="n">ret</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_device_handle</span><span class="p">,</span> <span class="n">nscan</span><span class="p">,</span> <span class="n">nchan</span><span class="p">,</span> <span class="n">buf</span><span class="p">,</span> <span class="n">options</span><span class="p">,</span> <span class="n">timeout</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ret</span><span class="p">,</span> <span class="p">[</span><span class="n">val</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">buf</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="MCCUSB1208FSPlusDevice.aInScanStop"><a class="viewcode-back" href="../mccusb.html#mccusb.MCCUSB1208FSPlusDevice.aInScanStop">[docs]</a>    <span class="k">def</span> <span class="nf">aInScanStop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># void usbAInScanStop_USB1208FS_Plus(libusb_device_handle *udev);</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">getfunc</span><span class="p">(</span><span class="s1">&#39;usbAInScanStop_USB1208FS_Plus&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">c_void_p</span><span class="p">],</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">f</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_device_handle</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MCCUSB1208FSPlusDevice.aInScanClearFIFO"><a class="viewcode-back" href="../mccusb.html#mccusb.MCCUSB1208FSPlusDevice.aInScanClearFIFO">[docs]</a>    <span class="k">def</span> <span class="nf">aInScanClearFIFO</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># void usbAInScanClearFIFO_USB1208FS_Plus(libusb_device_handle *udev);</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">getfunc</span><span class="p">(</span><span class="s1">&#39;usbAInScanClearFIFO_USB1208FS_Plus&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">c_void_p</span><span class="p">],</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">f</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_device_handle</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MCCUSB1208FSPlusDevice.aOut"><a class="viewcode-back" href="../mccusb.html#mccusb.MCCUSB1208FSPlusDevice.aOut">[docs]</a>    <span class="k">def</span> <span class="nf">aOut</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="c1"># void usbAOut_USB1208FS_Plus(libusb_device_handle *udev, uint8_t channel, uint16_t value);</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">getfunc</span><span class="p">(</span><span class="s1">&#39;usbAOut_USB1208FS_Plus&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">c_void_p</span><span class="p">,</span> <span class="n">c_uint8</span><span class="p">,</span> <span class="n">c_uint16</span><span class="p">],</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">f</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_device_handle</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MCCUSB1208FSPlusDevice.aOutR"><a class="viewcode-back" href="../mccusb.html#mccusb.MCCUSB1208FSPlusDevice.aOutR">[docs]</a>    <span class="k">def</span> <span class="nf">aOutR</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">):</span>
+        <span class="c1"># uint16_t usbAOutR_USB1208FS_Plus(libusb_device_handle *udev, uint8_t channel);</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">getfunc</span><span class="p">(</span><span class="s1">&#39;usbAOutR_USB1208FS_Plus&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">c_void_p</span><span class="p">,</span> <span class="n">c_uint8</span><span class="p">],</span> <span class="n">c_uint16</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">f</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_device_handle</span><span class="p">,</span> <span class="n">channel</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MCCUSB1208FSPlusDevice.aOutScanStop"><a class="viewcode-back" href="../mccusb.html#mccusb.MCCUSB1208FSPlusDevice.aOutScanStop">[docs]</a>    <span class="k">def</span> <span class="nf">aOutScanStop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># void usbAOutScanStop_USB1208FS_Plus(libusb_device_handle *udev);</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">getfunc</span><span class="p">(</span><span class="s1">&#39;usbAOutScanStop_USB1208FS_Plus&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">c_void_p</span><span class="p">],</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">f</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_device_handle</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MCCUSB1208FSPlusDevice.aOutScanClearFIFO"><a class="viewcode-back" href="../mccusb.html#mccusb.MCCUSB1208FSPlusDevice.aOutScanClearFIFO">[docs]</a>    <span class="k">def</span> <span class="nf">aOutScanClearFIFO</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># void usbAOutScanClearFIFO_USB1208FS_Plus(libusb_device_handle *udev);</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">getfunc</span><span class="p">(</span><span class="s1">&#39;usbAOutScanClearFIFO_USB1208FS_Plus&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">c_void_p</span><span class="p">],</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">f</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_device_handle</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MCCUSB1208FSPlusDevice.aInBulkFlush"><a class="viewcode-back" href="../mccusb.html#mccusb.MCCUSB1208FSPlusDevice.aInBulkFlush">[docs]</a>    <span class="k">def</span> <span class="nf">aInBulkFlush</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">count</span><span class="p">):</span>
+        <span class="c1"># void usbAInBulkFlush_USB1208FS_Plus(libusb_device_handle *udev, uint8_t count);</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">getfunc</span><span class="p">(</span><span class="s1">&#39;usbAInBulkFlush_USB1208FS_Plus&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">c_void_p</span><span class="p">,</span> <span class="n">c_uint8</span><span class="p">],</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">f</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_device_handle</span><span class="p">,</span> <span class="n">count</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MCCUSB1208FSPlusDevice.aOutScanStart"><a class="viewcode-back" href="../mccusb.html#mccusb.MCCUSB1208FSPlusDevice.aOutScanStart">[docs]</a>    <span class="k">def</span> <span class="nf">aOutScanStart</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span> <span class="n">frequency</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
+        <span class="c1"># void usbAOutScanStart_USB1208FS_Plus(libusb_device_handle *udev, uint32_t count, double frequency, uint8_t options);</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">getfunc</span><span class="p">(</span><span class="s1">&#39;usbAOutScanStart_USB1208FS_Plus&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">c_void_p</span><span class="p">,</span> <span class="n">c_uint32</span><span class="p">,</span> <span class="n">c_double</span><span class="p">,</span> <span class="n">c_uint8</span><span class="p">],</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">f</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_device_handle</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span> <span class="n">frequency</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MCCUSB1208FSPlusDevice.counter"><a class="viewcode-back" href="../mccusb.html#mccusb.MCCUSB1208FSPlusDevice.counter">[docs]</a>    <span class="k">def</span> <span class="nf">counter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># uint32_t usbCounter_USB1208FS_Plus(libusb_device_handle *udev);</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">getfunc</span><span class="p">(</span><span class="s1">&#39;usbCounter_USB1208FS_Plus&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">c_void_p</span><span class="p">],</span> <span class="n">c_uint32</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">f</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_device_handle</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MCCUSB1208FSPlusDevice.counterInit"><a class="viewcode-back" href="../mccusb.html#mccusb.MCCUSB1208FSPlusDevice.counterInit">[docs]</a>    <span class="k">def</span> <span class="nf">counterInit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># void usbCounterInit_USB1208FS_Plus(libusb_device_handle *udev);</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">getfunc</span><span class="p">(</span><span class="s1">&#39;usbCounterInit_USB1208FS_Plus&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">c_void_p</span><span class="p">],</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">f</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_device_handle</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MCCUSB1208FSPlusDevice.readCalMemory"><a class="viewcode-back" href="../mccusb.html#mccusb.MCCUSB1208FSPlusDevice.readCalMemory">[docs]</a>    <span class="k">def</span> <span class="nf">readCalMemory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span> <span class="n">buffersize</span><span class="p">):</span>
+        <span class="c1"># void usbReadCalMemory_USB1208FS_Plus(libusb_device_handle *udev, uint16_t address, uint16_t count, uint8_t memory[]);</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">getfunc</span><span class="p">(</span><span class="s1">&#39;usbReadCalMemory_USB1208FS_Plus&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">c_void_p</span><span class="p">,</span> <span class="n">c_uint16</span><span class="p">,</span> <span class="n">c_uint16</span><span class="p">,</span> <span class="n">POINTER</span><span class="p">(</span><span class="n">c_uint8</span><span class="p">)],</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">buf</span> <span class="o">=</span> <span class="p">(</span><span class="n">c_uint8</span> <span class="o">*</span> <span class="n">buffersize</span><span class="p">)()</span>
+        <span class="n">f</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_device_handle</span><span class="p">,</span> <span class="n">address</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span> <span class="n">buf</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">val</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">buf</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="MCCUSB1208FSPlusDevice.writeCalMemory"><a class="viewcode-back" href="../mccusb.html#mccusb.MCCUSB1208FSPlusDevice.writeCalMemory">[docs]</a>    <span class="k">def</span> <span class="nf">writeCalMemory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="c1"># void usbWriteCalMemory_USB1208FS_Plus(libusb_device_handle *udev, uint16_t address,  uint16_t count, uint8_t data[]);</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">getfunc</span><span class="p">(</span><span class="s1">&#39;usbWriteCalMemory_USB1208FS_Plus&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">c_void_p</span><span class="p">,</span> <span class="n">c_uint16</span><span class="p">,</span> <span class="n">c_uint16</span><span class="p">,</span> <span class="n">POINTER</span><span class="p">(</span><span class="n">c_uint8</span><span class="p">)],</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">f</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_device_handle</span><span class="p">,</span> <span class="n">address</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span> <span class="n">sequence_to_array</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">c_uint8</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="MCCUSB1208FSPlusDevice.readUserMemory"><a class="viewcode-back" href="../mccusb.html#mccusb.MCCUSB1208FSPlusDevice.readUserMemory">[docs]</a>    <span class="k">def</span> <span class="nf">readUserMemory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span> <span class="n">buffersize</span><span class="p">):</span>
+        <span class="c1"># void usbReadUserMemory_USB1208FS_Plus(libusb_device_handle *udev, uint16_t address, uint16_t count, uint8_t memory[]);</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">getfunc</span><span class="p">(</span><span class="s1">&#39;usbReadUserMemory_USB1208FS_Plus&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">c_void_p</span><span class="p">,</span> <span class="n">c_uint16</span><span class="p">,</span> <span class="n">c_uint16</span><span class="p">,</span> <span class="n">POINTER</span><span class="p">(</span><span class="n">c_uint8</span><span class="p">)],</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">buf</span> <span class="o">=</span> <span class="p">(</span><span class="n">c_uint8</span> <span class="o">*</span> <span class="n">buffersize</span><span class="p">)()</span>
+        <span class="n">f</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_device_handle</span><span class="p">,</span> <span class="n">address</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span> <span class="n">buf</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">val</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">buf</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="MCCUSB1208FSPlusDevice.writeUserMemory"><a class="viewcode-back" href="../mccusb.html#mccusb.MCCUSB1208FSPlusDevice.writeUserMemory">[docs]</a>    <span class="k">def</span> <span class="nf">writeUserMemory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="c1"># void usbWriteUserMemory_USB1208FS_Plus(libusb_device_handle *udev, uint16_t address,  uint16_t count, uint8_t data[]);</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">getfunc</span><span class="p">(</span><span class="s1">&#39;usbWriteUserMemory_USB1208FS_Plus&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">c_void_p</span><span class="p">,</span> <span class="n">c_uint16</span><span class="p">,</span> <span class="n">c_uint16</span><span class="p">,</span> <span class="n">POINTER</span><span class="p">(</span><span class="n">c_uint8</span><span class="p">)],</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">f</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_device_handle</span><span class="p">,</span> <span class="n">address</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span> <span class="n">sequence_to_array</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">c_uint8</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="MCCUSB1208FSPlusDevice.readMBDMemory"><a class="viewcode-back" href="../mccusb.html#mccusb.MCCUSB1208FSPlusDevice.readMBDMemory">[docs]</a>    <span class="k">def</span> <span class="nf">readMBDMemory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span> <span class="n">buffersize</span><span class="p">):</span>
+        <span class="c1"># void usbReadMBDMemory_USB1208FS_Plus(libusb_device_handle *udev, uint16_t address, uint16_t count, uint8_t memory[]);</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">getfunc</span><span class="p">(</span><span class="s1">&#39;usbReadMBDMemory_USB1208FS_Plus&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">c_void_p</span><span class="p">,</span> <span class="n">c_uint16</span><span class="p">,</span> <span class="n">c_uint16</span><span class="p">,</span> <span class="n">POINTER</span><span class="p">(</span><span class="n">c_uint8</span><span class="p">)],</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">buf</span> <span class="o">=</span> <span class="p">(</span><span class="n">c_uint8</span> <span class="o">*</span> <span class="n">buffersize</span><span class="p">)()</span>
+        <span class="n">f</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_device_handle</span><span class="p">,</span> <span class="n">address</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span> <span class="n">buf</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">val</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">buf</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="MCCUSB1208FSPlusDevice.writeMBDMemory"><a class="viewcode-back" href="../mccusb.html#mccusb.MCCUSB1208FSPlusDevice.writeMBDMemory">[docs]</a>    <span class="k">def</span> <span class="nf">writeMBDMemory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="c1"># void usbWriteMBDMemory_USB1208FS_Plus(libusb_device_handle *udev, uint16_t address,  uint16_t count, uint8_t data[]);</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">getfunc</span><span class="p">(</span><span class="s1">&#39;usbWriteMBDMemory_USB1208FS_Plus&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">c_void_p</span><span class="p">,</span> <span class="n">c_uint16</span><span class="p">,</span> <span class="n">c_uint16</span><span class="p">,</span> <span class="n">POINTER</span><span class="p">(</span><span class="n">c_uint8</span><span class="p">)],</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">f</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_device_handle</span><span class="p">,</span> <span class="n">address</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span> <span class="n">sequence_to_array</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">c_uint8</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="MCCUSB1208FSPlusDevice.blink"><a class="viewcode-back" href="../mccusb.html#mccusb.MCCUSB1208FSPlusDevice.blink">[docs]</a>    <span class="k">def</span> <span class="nf">blink</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">count</span><span class="p">):</span>
+        <span class="c1"># void usbBlink_USB1208FS_Plus(libusb_device_handle *udev, uint8_t count);</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">getfunc</span><span class="p">(</span><span class="s1">&#39;usbBlink_USB1208FS_Plus&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">c_void_p</span><span class="p">,</span> <span class="n">c_uint8</span><span class="p">],</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">f</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_device_handle</span><span class="p">,</span> <span class="n">count</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MCCUSB1208FSPlusDevice.reset"><a class="viewcode-back" href="../mccusb.html#mccusb.MCCUSB1208FSPlusDevice.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># void usbReset_USB1208FS_Plus(libusb_device_handle *udev);</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">getfunc</span><span class="p">(</span><span class="s1">&#39;usbReset_USB1208FS_Plus&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">c_void_p</span><span class="p">],</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">f</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_device_handle</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MCCUSB1208FSPlusDevice.status"><a class="viewcode-back" href="../mccusb.html#mccusb.MCCUSB1208FSPlusDevice.status">[docs]</a>    <span class="k">def</span> <span class="nf">status</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># uint16_t usbStatus_USB1208FS_Plus(libusb_device_handle *udev);</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">getfunc</span><span class="p">(</span><span class="s1">&#39;usbStatus_USB1208FS_Plus&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">c_void_p</span><span class="p">],</span> <span class="n">c_uint16</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">f</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_device_handle</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MCCUSB1208FSPlusDevice.getSerialNumber"><a class="viewcode-back" href="../mccusb.html#mccusb.MCCUSB1208FSPlusDevice.getSerialNumber">[docs]</a>    <span class="k">def</span> <span class="nf">getSerialNumber</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># void usbGetSerialNumber_USB1208FS_Plus(libusb_device_handle *udev, char serial[9]);</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">getfunc</span><span class="p">(</span><span class="s1">&#39;usbGetSerialNumber_USB1208FS_Plus&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">c_void_p</span><span class="p">,</span> <span class="n">c_char</span> <span class="o">*</span> <span class="mi">9</span><span class="p">],</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">buf</span> <span class="o">=</span> <span class="n">create_string_buffer</span><span class="p">(</span><span class="mi">9</span><span class="p">)</span>
+        <span class="n">f</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_device_handle</span><span class="p">,</span> <span class="n">buf</span><span class="p">)</span>
+        <span class="k">return</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ch</span> <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">buf</span> <span class="k">if</span> <span class="n">ch</span> <span class="o">!=</span> <span class="sa">b</span><span class="s1">&#39;</span><span class="se">\x00</span><span class="s1">&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MCCUSB1208FSPlusDevice.dfu"><a class="viewcode-back" href="../mccusb.html#mccusb.MCCUSB1208FSPlusDevice.dfu">[docs]</a>    <span class="k">def</span> <span class="nf">dfu</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># void usbDFU_USB1208FS_Plus(libusb_device_handle *udev);</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">getfunc</span><span class="p">(</span><span class="s1">&#39;usbDFU_USB1208FS_Plus&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">c_void_p</span><span class="p">],</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">f</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_device_handle</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MCCUSB1208FSPlusDevice.mbdCommand"><a class="viewcode-back" href="../mccusb.html#mccusb.MCCUSB1208FSPlusDevice.mbdCommand">[docs]</a>    <span class="k">def</span> <span class="nf">mbdCommand</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">str_</span><span class="p">):</span>
+        <span class="c1"># void usbMBDCommand_USB1208FS_Plus(libusb_device_handle *udev, uint8_t str[]);</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">getfunc</span><span class="p">(</span><span class="s1">&#39;usbMBDCommand_USB1208FS_Plus&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">c_void_p</span><span class="p">,</span> <span class="n">POINTER</span><span class="p">(</span><span class="n">c_uint8</span><span class="p">)],</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">f</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_device_handle</span><span class="p">,</span> <span class="n">sequence_to_array</span><span class="p">(</span><span class="n">str_</span><span class="p">,</span> <span class="n">c_uint8</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="MCCUSB1208FSPlusDevice.mbdRaw"><a class="viewcode-back" href="../mccusb.html#mccusb.MCCUSB1208FSPlusDevice.mbdRaw">[docs]</a>    <span class="k">def</span> <span class="nf">mbdRaw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cmd</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+        <span class="c1"># void usbMBDRaw_USB1208FS_Plus(libusb_device_handle *udev, uint8_t cmd[], uint16_t size);</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">getfunc</span><span class="p">(</span><span class="s1">&#39;usbMBDRaw_USB1208FS_Plus&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">c_void_p</span><span class="p">,</span> <span class="n">POINTER</span><span class="p">(</span><span class="n">c_uint8</span><span class="p">),</span> <span class="n">c_uint16</span><span class="p">],</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">f</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_device_handle</span><span class="p">,</span> <span class="n">sequence_to_array</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">c_uint8</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="MCCUSB1208FSPlusDevice.cleanup"><a class="viewcode-back" href="../mccusb.html#mccusb.MCCUSB1208FSPlusDevice.cleanup">[docs]</a>    <span class="k">def</span> <span class="nf">cleanup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># void cleanup_USB1208FS_Plus(libusb_device_handle *udev);</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">getfunc</span><span class="p">(</span><span class="s1">&#39;cleanup_USB1208FS_Plus&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">c_void_p</span><span class="p">],</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">f</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_device_handle</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MCCUSB1208FSPlusDevice.buildGainTableDE"><a class="viewcode-back" href="../mccusb.html#mccusb.MCCUSB1208FSPlusDevice.buildGainTableDE">[docs]</a>    <span class="k">def</span> <span class="nf">buildGainTableDE</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table_DE</span><span class="p">):</span>
+        <span class="c1"># void usbBuildGainTable_DE_USB1208FS_Plus(libusb_device_handle *udev, float table_DE[NGAINS_USB1208FS_PLUS][NCHAN_DE][2]);</span>
+        <span class="n">table_type</span> <span class="o">=</span> <span class="n">c_float</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">NCHAN_DE</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">NGAINS_USB1208FS_PLUS</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">getfunc</span><span class="p">(</span><span class="s1">&#39;usbBuildGainTable_DE_USB1208FS_Plus&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">c_void_p</span><span class="p">,</span> <span class="n">table_type</span><span class="p">],</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">table</span> <span class="o">=</span> <span class="n">table_type</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">NGAINS_USB1208FS_PLUS</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">NCHAN_DE</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
+                    <span class="n">table</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">table_DE</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">][</span><span class="n">k</span><span class="p">]</span>
+        <span class="n">f</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_device_handle</span><span class="p">,</span> <span class="n">table</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MCCUSB1208FSPlusDevice.buildGainTableSE"><a class="viewcode-back" href="../mccusb.html#mccusb.MCCUSB1208FSPlusDevice.buildGainTableSE">[docs]</a>    <span class="k">def</span> <span class="nf">buildGainTableSE</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table_SE</span><span class="p">):</span>
+        <span class="c1"># void usbBuildGainTable_SE_USB1208FS_Plus(libusb_device_handle *udev, float table_SE[NCHAN_SE][2]);</span>
+        <span class="n">table_type</span> <span class="o">=</span> <span class="n">c_float</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">NCHAN_SE</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">getfunc</span><span class="p">(</span><span class="s1">&#39;usbBuildGainTable_SE_USB1208FS_Plus&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">c_void_p</span><span class="p">,</span> <span class="n">table_type</span><span class="p">],</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">table</span> <span class="o">=</span> <span class="n">table_type</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">NCHAN_SE</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
+                <span class="n">table</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">table_SE</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span>
+        <span class="n">f</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_device_handle</span><span class="p">,</span> <span class="n">table</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MCCUSB1208FSPlusDevice.volts"><a class="viewcode-back" href="../mccusb.html#mccusb.MCCUSB1208FSPlusDevice.volts">[docs]</a>    <span class="k">def</span> <span class="nf">volts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">range_</span><span class="p">):</span>
+        <span class="c1"># double volts_USB1208FS_Plus(uint16_t value, uint8_t range);</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">getfunc</span><span class="p">(</span><span class="s1">&#39;volts_USB1208FS_Plus&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">c_uint16</span><span class="p">,</span> <span class="n">c_uint8</span><span class="p">],</span> <span class="n">c_double</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">f</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">range_</span><span class="p">)</span></div></div>
+
+    <span class="c1"># TODO: Construt struct tm in Python</span>
+    <span class="c1"># void usbCalDate_USB1208FS_Plus(libusb_device_handle *udev, struct tm *date);</span>
+
+
+<div class="viewcode-block" id="MCCUSB1408FSPlusDevice"><a class="viewcode-back" href="../mccusb.html#mccusb.MCCUSB1408FSPlusDevice">[docs]</a><span class="k">class</span> <span class="nc">MCCUSB1408FSPlusDevice</span><span class="p">(</span><span class="n">MCCUSB1208FSPlusDevice</span><span class="p">):</span>
+
+    <span class="n">PRODUCT_ID</span> <span class="o">=</span> <span class="mh">0x00e9</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">MCCUSBDevice</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;USB-1408FS-Plus&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">PRODUCT_ID</span><span class="p">)</span>
+
+<div class="viewcode-block" id="MCCUSB1408FSPlusDevice.volts"><a class="viewcode-back" href="../mccusb.html#mccusb.MCCUSB1408FSPlusDevice.volts">[docs]</a>    <span class="k">def</span> <span class="nf">volts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">range_</span><span class="p">):</span>
+        <span class="c1"># double volts_USB1408FS_Plus(uint16_t value, uint8_t range);</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">getfunc</span><span class="p">(</span><span class="s1">&#39;volts_USB1408FS_Plus&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">c_uint16</span><span class="p">,</span> <span class="n">c_uint8</span><span class="p">],</span> <span class="n">c_double</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">f</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">range_</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Zhiming Wang.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1dev',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
