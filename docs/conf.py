@@ -23,6 +23,11 @@ master_doc = 'index'
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 pygments_style = 'sphinx'
 
+html_favicon = 'favicon.ico'
+html_extra_path = [
+    'CNAME',
+]
+
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.viewcode',
