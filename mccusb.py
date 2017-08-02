@@ -1,9 +1,13 @@
+import os
 from ctypes import *
 
 
-libmccusb = cdll.LoadLibrary('libmccusb.so')
-# libusb_init is essential; without it usb_device_find_USB_MCC would segfault.
-libmccusb.libusb_init(None)
+# Do not load shared library when building docs.
+# This allows building docs in any pure Python environment.
+if not os.getenv('SPHINX_BUILD'):
+    libmccusb = cdll.LoadLibrary('libmccusb.so')
+    # libusb_init is essential; without it usb_device_find_USB_MCC would segfault.
+    libmccusb.libusb_init(None)
 
 
 def getfunc(name, argtypes, restype):
