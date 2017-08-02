@@ -1,0 +1,3 @@
+[submodule "vendor/src/hidapi"]
+	path = vendor/src/hidapi
+	url = https://github.com/signal11/hidapi
