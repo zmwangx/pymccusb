@@ -47,11 +47,91 @@ class MCCUSB1208FSPlusDevice(MCCUSBDevice):
 
     PRODUCT_ID = 0x00e8
 
-    NCHAN_DE = 4
-    NCHAN_SE = 8
-    NCHAN_AOUT = 2
-    NGAINS_USB1208FS_PLUS = 8
-    MAX_PACKET_SIZE = 64
+    # Digial I/O commands
+    DTRISTATE       = 0x00  # Read/Write Tristate register
+    DPORT           = 0x01  # Read digital port pins
+    DLATCH          = 0x02  # Read/Write Digital port output latch register
+
+    # Analog input commands
+    AIN             = 0x10  # Read analog input channel
+    AIN_SCAN_START  = 0x11  # Start analog input scan
+    AIN_SCAN_STOP   = 0x12  # Stop analog input scan
+    AIN_CONFIG      = 0x14  # Analog input channel configuration
+    AIN_CLR_FIFO    = 0x15  # Clear the analog input scan FIFO
+    AIN_BULK_FLUSH  = 0x16  # Flush the bulk IN endpoint with empty packets
+
+    # Analog output commands
+    AOUT            = 0x18  # Read/Write analog output channel
+    AOUT_SCAN_START = 0x1A  # Start analog output scan
+    AOUT_SCAN_STOP  = 0x1B  # Stop analog output scan
+    AOUT_CLR_FIFO   = 0x1C  # Clear the analog output scan FIFO
+
+    # Counter/Timer commands
+    COUNTER         = 0x20  # Read/reset event counter
+
+    # Memory commands
+    CAL_MEMORY      = 0x30  # Read/Write Calibration Memory
+    USER_MEMORY     = 0x31  # Read/Write User Memory
+    MBD_MEMORY      = 0x32  # Read/Write MBD Memory
+
+    # Miscellaneous commands
+    BLINK_LED       = 0x41  # Causes LED to blink
+    RESET           = 0x42  # Reset device
+    STATUS          = 0x44  # Read device status
+    SERIAL          = 0x48  # Read/Write serial number
+    DFU             = 0x50  # Enter device firmware upgrade mode
+
+    # MBD
+    MBD_COMMAND     = 0x80  # Text-based MBD command / response
+    MBD_RAW         = 0x81  # Raw MBD response
+
+    # Analog input scan options
+    IMMEDIATE_TRANSFER_MODE = 0x1
+    BLOCK_TRANSFER_MODE     = 0x0
+    DIFFERENTIAL_MODE       = 0x2
+    SINGLE_ENDED_MODE       = 0x0
+    NO_TRIGGER              = 0x0
+    TRIG_EDGE_RISING        = 0x1 << 2
+    TRIG_EDGE_FALLING       = 0x2 << 2
+    TRIG_LEVEL_HIGH         = 0x3 << 2
+    TRIG_LEVEL_LOW          = 0x4 << 2
+    RETRIGGER_MODE          = 0x1 << 5
+    STALL_ON_OVERRUN        = 0x0
+    CONTINUOUS              = 0x1 << 6
+    INHIBIT_STALL           = 0x1 << 7
+
+    # Analog input
+    SINGLE_ENDED   = 0
+    DIFFERENTIAL   = 1
+    CALIBRATION    = 3
+    LAST_CHANNEL   = 0x80
+    PACKET_SIZE    = 64       # max bulk transfer size in bytes
+
+    # Ranges
+    BP_20V   = 0x0      # +/- 20 V
+    BP_10V   = 0x1      # +/- 10V
+    BP_5V    = 0x2      # +/- 5V
+    BP_4V    = 0x3      # +/- 4V
+    BP_2_5V  = 0x4      # +/- 2.5V
+    BP_2V    = 0x5      # +/- 2V
+    BP_1_25V = 0x6      # +/- 1.25V
+    BP_1V    = 0x7      # +/- 1V
+    UP_5V    = 0x8      # 0-5 V analog output
+
+    # Status bit values
+    AIN_SCAN_RUNNING   = 0x1 << 1
+    AIN_SCAN_OVERRUN   = 0x1 << 2
+    AOUT_SCAN_RUNNING  = 0x1 << 3
+    AOUT_SCAN_OVERRUN  = 0x1 << 4
+
+    NCHAN_DE                =  4  # max number of A/D differential channels
+    NCHAN_SE                =  8  # max number of A/D single-ended channels
+    NCHAN_AOUT              =  2  # max number of D/A 12 bit 0-5V output channels
+    NGAINS_USB1208FS_PLUS   =  8  # max number of input gain levels (differential mode only)
+    MAX_PACKET_SIZE         = 64  # max packet size for FS device
+
+    PORTA     = 0  # DIO Port A
+    PORTB     = 1  # DIO Port B
 
     def __init__(self):
         MCCUSBDevice.__init__(self, 'USB-1208FS-Plus', self.PRODUCT_ID)
