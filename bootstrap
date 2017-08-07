@@ -2,7 +2,7 @@
 
 set -e
 
-root="$(dirname "$(realpath $0)")"
+root=$PWD
 
 hr () {
     printf '=%.0s' {1..79}

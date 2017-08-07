@@ -20,7 +20,7 @@ On Debian/Ubuntu::
 Building vendored components
 ----------------------------
 
-::
+Run ``bootstrap`` from the root of this repository::
 
     ./bootstrap
 
